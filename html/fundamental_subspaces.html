@@ -1,0 +1,299 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>fundamental_subspaces</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-10-15"><meta name="DC.source" content="fundamental_subspaces.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> [column_space, row_space, left_null_space, right_null_space] = fundamental_subspaces(A)
+<span class="comment">%FUNDAMENTAL_SUBSPACES: Given an mxn matrix, calculate the basis for all 4 of its</span>
+<span class="comment">%fundamental subspaces</span>
+<span class="comment">%   Column Space</span>
+<span class="comment">%   Right Null Space</span>
+<span class="comment">%   Row Space</span>
+<span class="comment">%   Left Null Space</span>
+
+m = size(A, 1);
+n = size(A, 2);
+
+<span class="comment">% compute the reduced row echelon form of A as E_r, also get the pivot</span>
+<span class="comment">% columns locations</span>
+[E_r, pivots] = rref(A);
+E_r
+
+<span class="comment">% track the indices of the zero rows of E_r</span>
+zero_rows = [];
+
+<span class="comment">% select the nonzero rows of E_r as the basis of the row space</span>
+non_zero_rows = [];
+
+<span class="keyword">for</span> row_index = 1:m <span class="comment">% loop over the rows</span>
+    <span class="keyword">if</span> E_r(row_index, :) == zeros(1,n);
+        zero_rows(end+1) = row_index;
+    <span class="keyword">else</span>
+        non_zero_rows(end+1) = row_index;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% the row_space is spanned by the nonzero rows of E_r</span>
+row_space = E_r(non_zero_rows,:)'
+
+<span class="comment">% the columns space is spanned by the equivalent columns of A that hold the</span>
+<span class="comment">% pivots when reduced to E_r</span>
+column_space = A(:, pivots)
+
+<span class="comment">% to find the basis of the left null space, we can compute the reduced row</span>
+<span class="comment">% echelon form of [A I], where the dimension of I is consistent with the</span>
+<span class="comment">% rows of A</span>
+E_r_M = rref([A eye(m)]);
+left_null_space = E_r_M(zero_rows, n+1:end)'
+
+<span class="comment">% MATLAB has a built in way to calculate the right null space of a matrix</span>
+right_null_space_numerical = null(A)
+
+<span class="comment">% unfortunately, this doesn't seem super exact, and also seems subject to</span>
+<span class="comment">% numerical approximation problems</span>
+<span class="comment">% instead, lets try to get an algebraic (and therefore exact) determination</span>
+<span class="comment">% of the null space:</span>
+
+<span class="comment">% locate the non-pivot columns of A</span>
+A_non_pivots = A;
+<span class="comment">% strip the pivots from A to leave only non-pivots</span>
+A_non_pivots(:, pivots) = [];
+
+<span class="comment">% locate the columns indexes of the non-pivot columns of A</span>
+non_pivots = [];
+<span class="keyword">for</span> col_index = 1:n
+    <span class="keyword">for</span> non_pivot_index = 1:size(A_non_pivots,2)
+        <span class="keyword">if</span> A(:, col_index) == A_non_pivots(:, non_pivot_index)
+            non_pivots(end+1) = col_index;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% strip the zero rows from E_r</span>
+E_r_nonzero = E_r;
+E_r_nonzero(all(A == 0,2), :) = [];
+
+<span class="comment">% construct an empty matrix of the appropriate dimensions (n x n)</span>
+E_r_aug = zeros(n);
+
+<span class="comment">% construct an empty matrix of the appropriate dimensions (n x (r-n))</span>
+I_aug = zeros(n,size(non_pivots, 2));
+
+<span class="comment">% define some counters we will use to iterate over pivots/non-pivots</span>
+row_counter = 1;
+eye_row_counter = 1;
+
+<span class="comment">% loop over columns to select appropriate rows...</span>
+<span class="keyword">while</span> row_counter &lt;= n
+
+    <span class="comment">% columns are either pivots, in which case we add the appropriate row</span>
+    <span class="keyword">if</span> find(pivots == row_counter)
+        E_r_aug(row_counter, :) = E_r_nonzero(1, :);
+        E_r_nonzero(1, :) = [];
+    <span class="keyword">end</span>
+
+    <span class="comment">% or non-pivots, in which case we</span>
+    <span class="keyword">if</span> find(non_pivots == row_counter)
+        E_r_aug(row_counter, row_counter) = 1;
+        I_aug(row_counter, eye_row_counter) = 1;
+        eye_row_counter = eye_row_counter + 1;
+    <span class="keyword">end</span>
+    row_counter = row_counter + 1;
+<span class="keyword">end</span>
+
+<span class="comment">% concat the augmented E_r matrix with the augmented I matrix, row reduce</span>
+E_r_rns = rref([E_r_aug I_aug]);
+
+<span class="comment">% take the last r - n columns of the concatenated matrix</span>
+right_null_space = E_r_rns(:, end - size(non_pivots, 2) + 1:end)
+
+<span class="comment">% do some final checking to ensure all dimensions agree</span>
+<span class="keyword">if</span> m ~= size(row_space, 2) + size(left_null_space, 2)
+    fprintf(<span class="string">'something is off, the row subspace dimensions do not agree with the matrix dimensions'</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> n ~= size(column_space, 2) + size(right_null_space, 2)
+    printf(<span class="string">'something is off, the column subspace dimensions do not agree with the matrix dimensions'</span>)
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [column_space, row_space, left_null_space, right_null_space] = fundamental_subspaces(A)
+%FUNDAMENTAL_SUBSPACES: Given an mxn matrix, calculate the basis for all 4 of its
+%fundamental subspaces
+%   Column Space
+%   Right Null Space
+%   Row Space
+%   Left Null Space
+
+m = size(A, 1);
+n = size(A, 2);
+
+% compute the reduced row echelon form of A as E_r, also get the pivot
+% columns locations
+[E_r, pivots] = rref(A);
+E_r
+
+% track the indices of the zero rows of E_r
+zero_rows = [];
+
+% select the nonzero rows of E_r as the basis of the row space
+non_zero_rows = [];
+
+for row_index = 1:m % loop over the rows
+    if E_r(row_index, :) == zeros(1,n);
+        zero_rows(end+1) = row_index;
+    else
+        non_zero_rows(end+1) = row_index;
+    end
+end
+
+% the row_space is spanned by the nonzero rows of E_r
+row_space = E_r(non_zero_rows,:)'
+
+% the columns space is spanned by the equivalent columns of A that hold the
+% pivots when reduced to E_r
+column_space = A(:, pivots)
+
+% to find the basis of the left null space, we can compute the reduced row
+% echelon form of [A I], where the dimension of I is consistent with the
+% rows of A
+E_r_M = rref([A eye(m)]);
+left_null_space = E_r_M(zero_rows, n+1:end)'
+
+% MATLAB has a built in way to calculate the right null space of a matrix
+right_null_space_numerical = null(A)
+
+% unfortunately, this doesn't seem super exact, and also seems subject to
+% numerical approximation problems
+% instead, lets try to get an algebraic (and therefore exact) determination
+% of the null space:
+
+% locate the non-pivot columns of A
+A_non_pivots = A;
+% strip the pivots from A to leave only non-pivots
+A_non_pivots(:, pivots) = [];
+
+% locate the columns indexes of the non-pivot columns of A
+non_pivots = [];
+for col_index = 1:n
+    for non_pivot_index = 1:size(A_non_pivots,2)
+        if A(:, col_index) == A_non_pivots(:, non_pivot_index)
+            non_pivots(end+1) = col_index;
+        end
+    end
+end
+
+% strip the zero rows from E_r
+E_r_nonzero = E_r;
+E_r_nonzero(all(A == 0,2), :) = [];
+
+% construct an empty matrix of the appropriate dimensions (n x n)
+E_r_aug = zeros(n);
+
+% construct an empty matrix of the appropriate dimensions (n x (r-n))
+I_aug = zeros(n,size(non_pivots, 2));
+
+% define some counters we will use to iterate over pivots/non-pivots
+row_counter = 1;
+eye_row_counter = 1;
+
+% loop over columns to select appropriate rows...
+while row_counter <= n
+    
+    % columns are either pivots, in which case we add the appropriate row
+    if find(pivots == row_counter)
+        E_r_aug(row_counter, :) = E_r_nonzero(1, :);
+        E_r_nonzero(1, :) = [];
+    end
+
+    % or non-pivots, in which case we 
+    if find(non_pivots == row_counter)
+        E_r_aug(row_counter, row_counter) = 1;
+        I_aug(row_counter, eye_row_counter) = 1;
+        eye_row_counter = eye_row_counter + 1;
+    end
+    row_counter = row_counter + 1;
+end
+
+% concat the augmented E_r matrix with the augmented I matrix, row reduce
+E_r_rns = rref([E_r_aug I_aug]);
+
+% take the last r - n columns of the concatenated matrix
+right_null_space = E_r_rns(:, end - size(non_pivots, 2) + 1:end)
+
+% do some final checking to ensure all dimensions agree
+if m ~= size(row_space, 2) + size(left_null_space, 2)
+    fprintf('something is off, the row subspace dimensions do not agree with the matrix dimensions')
+end
+
+if n ~= size(column_space, 2) + size(right_null_space, 2)
+    printf('something is off, the column subspace dimensions do not agree with the matrix dimensions')
+end
+end
+##### SOURCE END #####
+--></body></html>
