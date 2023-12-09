@@ -1,0 +1,449 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MAE272_HW5</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-12-08"><meta name="DC.source" content="MAE272_HW5.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">1 - Implications of the Observability Gramian</a></li><li><a href="#3">1.1 - Observability Gramian</a></li><li><a href="#4">1.2 - Zero Observability Initial Condition</a></li><li><a href="#5">1.3 - Unit Initial Condition Maximization</a></li><li><a href="#6">2 - Stability</a></li><li><a href="#7">2.1 - Lyapnuov Stability (Lyapunov Method)</a></li><li><a href="#8">2.2 - Lyapunov Stability (Eigenvalues)</a></li><li><a href="#9">3 - LQR (Infinite Horizon)</a></li><li><a href="#10">3.1 - Definition</a></li><li><a href="#11">3.2 - Design</a></li><li><a href="#12">3.3 - Simulation</a></li><li><a href="#13">3.4 - Comparison</a></li><li><a href="#14">4 - LQR (Finite Horizon)</a></li><li><a href="#15">4.1 - Forward Ricatti Equation</a></li><li><a href="#16">4.2 - Optimal Gain Trajectories</a></li></ul></div><pre class="codeinput">clearvars; close <span class="string">all</span>; clc
+</pre><h2 id="2">1 - Implications of the Observability Gramian</h2><h2 id="3">1.1 - Observability Gramian</h2><pre class="codeinput">A1 = [[-1 0 0];[0 -1 0];[0 0 -2]];
+B1 = [1;0;0];
+C1 = [1 1 0];
+D1 = 0;
+
+sys1 = ss(A1,B1,C1,D1);
+observability_gramian1 = gram(sys1, <span class="string">'o'</span>)
+
+[V_o, D_o] = eig(observability_gramian1)
+</pre><pre class="codeoutput">
+observability_gramian1 =
+
+    0.5000    0.5000         0
+    0.5000    0.5000         0
+         0         0         0
+
+
+V_o =
+
+   -0.7071         0    0.7071
+    0.7071         0    0.7071
+         0    1.0000         0
+
+
+D_o =
+
+     0     0     0
+     0     0     0
+     0     0     1
+
+</pre><h2 id="4">1.2 - Zero Observability Initial Condition</h2><pre class="codeinput"><span class="comment">% zero output initial condition response</span>
+figure(12)
+h12 = initialplot(sys1, [0 0 3.141519e7]);
+h12.setoptions(<span class="string">'Grid'</span>, <span class="string">'on'</span>)
+</pre><img vspace="5" hspace="5" src="MAE272_HW5_01.png" alt=""> <h2 id="5">1.3 - Unit Initial Condition Maximization</h2><pre class="codeinput"><span class="comment">%  max output initial condition response</span>
+figure(13)
+h13 = initialplot(sys1, [1/sqrt(2) 1/sqrt(2) 0]);
+h13.setoptions(<span class="string">'Grid'</span>, <span class="string">'on'</span>)
+</pre><img vspace="5" hspace="5" src="MAE272_HW5_02.png" alt=""> <h2 id="6">2 - Stability</h2><h2 id="7">2.1 - Lyapnuov Stability (Lyapunov Method)</h2><pre class="codeinput">A2 = [[1 2 3];[0 5 6];[0 8 9]];
+B2 = [1;1;1];
+C2 = [0 1 0];
+D2 = 0;
+
+<span class="comment">% perform lyapunov method stability analysis</span>
+P = lyap(A2',eye(3))
+</pre><pre class="codeoutput">
+P =
+
+   -0.5000   -0.1667    0.2500
+   -0.1667    2.2143   -1.4048
+    0.2500   -1.4048    0.7976
+
+</pre><h2 id="8">2.2 - Lyapunov Stability (Eigenvalues)</h2><pre class="codeinput">A2 = [[1 2 3];[0 5 6];[0 8 9]];
+eig(A2)
+</pre><pre class="codeoutput">
+ans =
+
+    1.0000
+   -0.2111
+   14.2111
+
+</pre><h2 id="9">3 - LQR (Infinite Horizon)</h2><h2 id="10">3.1 - Definition</h2><h2 id="11">3.2 - Design</h2><h2 id="12">3.3 - Simulation</h2><pre class="codeinput">A3 = [[-1 0];[0 -1]];
+B3 = [[2 0];[0 2]];
+C3 = [1 1];
+Ceye = eye(2);
+D3 = 0;
+
+<span class="comment">% hand derived optimal gain K</span>
+K3 = [[0.309 0];[0 0.309]];
+eig(A3-B3*K3);
+
+<span class="comment">% simulation of the closed loop system</span>
+sys3_cl = ss(A3-B3*K3, B3, Ceye, D3);
+initialplot(sys3_cl, [1;0])
+grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="MAE272_HW5_03.png" alt=""> <h2 id="13">3.4 - Comparison</h2><pre class="codeinput">R = [[1 0];[0 1]];
+v_vec = [0 1 10 100 1000];
+
+<span class="keyword">for</span> i = 1:size(v_vec,2)
+    vi=v_vec(i);                        <span class="comment">% select entry of v</span>
+    sprintf(<span class="string">'for v = %d'</span>, vi)
+    Qi = [[(1+vi) -vi];[-vi (1+vi)]]    <span class="comment">% calculate Q</span>
+    [Ki,~,~] = lqr(A3,B3,Qi,R, [0])     <span class="comment">% derive optimal gain K for Q and R</span>
+    sys3_cl_i = ss(A3-B3*Ki, B3, Ceye, D3);
+
+    [Y,T,X] = initial(sys3_cl_i, [1;0]);<span class="comment">% simulate response</span>
+
+    <span class="comment">% plotting</span>
+    figure(31)
+    hold <span class="string">on</span>;
+    grid <span class="string">on</span>;
+    plot(T,X(:,1), <span class="string">'LineWidth'</span>, 2, <span class="string">'DisplayName'</span>, sprintf(<span class="string">'v = %d'</span>, v_vec(i)), <span class="string">'Color'</span>, [i/size(v_vec,2),0,(1+1/size(v_vec,2))-i/size(v_vec,2)]);
+    legend(<span class="string">'-DynamicLegend'</span>);
+    legend(<span class="string">'show'</span>);
+    xlabel(<span class="string">'time (s)'</span>);
+    ylabel(<span class="string">'state 1'</span>);
+    title(<span class="string">'Comparison of the effects of v scaling on state1 response'</span>);
+
+    figure(32)
+    hold <span class="string">on</span>;
+    grid <span class="string">on</span>;
+    plot(T,X(:,2), <span class="string">'LineWidth'</span>, 2, <span class="string">'DisplayName'</span>, sprintf(<span class="string">'v = %d'</span>, v_vec(i)), <span class="string">'Color'</span>, [i/size(v_vec,2),0,(1+1/size(v_vec,2))-i/size(v_vec,2)]);
+    legend(<span class="string">'-DynamicLegend'</span>);
+    legend(<span class="string">'show'</span>);
+    xlabel(<span class="string">'time (s)'</span>);
+    ylabel(<span class="string">'state 2'</span>);
+    title(<span class="string">'Comparison of the effects of v scaling on state2 response'</span>)
+<span class="keyword">end</span>
+figure(31)
+hold <span class="string">off</span>;
+figure(32)
+hold <span class="string">off</span>;
+</pre><pre class="codeoutput">
+ans =
+
+    'for v = 0'
+
+
+Qi =
+
+     1     0
+     0     1
+
+
+Ki =
+
+    0.6180         0
+         0    0.6180
+
+
+ans =
+
+    'for v = 1'
+
+
+Qi =
+
+     2    -1
+    -1     2
+
+
+Ki =
+
+    0.9604   -0.3424
+   -0.3424    0.9604
+
+
+ans =
+
+    'for v = 10'
+
+
+Qi =
+
+    11   -10
+   -10    11
+
+
+Ki =
+
+    2.3639   -1.7459
+   -1.7459    2.3639
+
+
+ans =
+
+    'for v = 100'
+
+
+Qi =
+
+   101  -100
+  -100   101
+
+
+Ki =
+
+    7.1521   -6.5341
+   -6.5341    7.1521
+
+
+ans =
+
+    'for v = 1000'
+
+
+Qi =
+
+        1001       -1000
+       -1000        1001
+
+
+Ki =
+
+   22.4267  -21.8086
+  -21.8086   22.4267
+
+</pre><img vspace="5" hspace="5" src="MAE272_HW5_04.png" alt=""> <img vspace="5" hspace="5" src="MAE272_HW5_05.png" alt=""> <h2 id="14">4 - LQR (Finite Horizon)</h2><h2 id="15">4.1 - Forward Ricatti Equation</h2><h2 id="16">4.2 - Optimal Gain Trajectories</h2><pre class="codeinput">tf = 10;
+R = eye(2);
+B4 = [[2 0];[0 2]];
+
+<span class="comment">% simulate the corresponding simulink model</span>
+simOut = sim(<span class="string">'MAE272_HW5_Q4'</span>);
+y = simOut.get(<span class="string">'yout'</span>);
+t = simOut.get(<span class="string">'tout'</span>);
+
+p11_bar = y{1}.Values.Data;
+p12_bar = y{2}.Values.Data;
+p22_bar = y{3}.Values.Data;
+
+<span class="comment">% reverse time (now we go forwards)</span>
+t = tf - t;
+
+P = [[p11_bar p12_bar];[p12_bar p22_bar]];
+
+<span class="comment">% Multiply P by R^{-1}*B^T = 2I here</span>
+K11 = 2*p11_bar;
+K12 = 2*p12_bar;
+K22 = 2*p22_bar;
+
+K = [[K11 K12];[K12 K22]];
+figure(4)
+grid <span class="string">on</span>
+hold <span class="string">on</span>
+plot(t,K11, <span class="string">'LineWidth'</span>, 2, <span class="string">'DisplayName'</span>, <span class="string">'K11'</span>)
+plot(t,K12, <span class="string">'LineWidth'</span>, 2, <span class="string">'DisplayName'</span>, <span class="string">'K12'</span>)
+plot(t,K22, <span class="string">'LineWidth'</span>, 2, <span class="string">'DisplayName'</span>, <span class="string">'K22'</span>)
+xlabel(<span class="string">'time (s)'</span>)
+ylabel(<span class="string">'gain K(t)'</span>)
+title(<span class="string">'Finite LQR Gain trajectories'</span>)
+legend()
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clearvars; close all; clc
+
+%% 1 - Implications of the Observability Gramian
+%%   1.1 - Observability Gramian
+
+A1 = [[-1 0 0];[0 -1 0];[0 0 -2]];
+B1 = [1;0;0];
+C1 = [1 1 0];
+D1 = 0;
+
+sys1 = ss(A1,B1,C1,D1);
+observability_gramian1 = gram(sys1, 'o')
+
+[V_o, D_o] = eig(observability_gramian1)
+
+%%   1.2 - Zero Observability Initial Condition
+
+% zero output initial condition response
+figure(12)
+h12 = initialplot(sys1, [0 0 3.141519e7]);
+h12.setoptions('Grid', 'on')
+
+%%   1.3 - Unit Initial Condition Maximization
+
+%  max output initial condition response
+figure(13)
+h13 = initialplot(sys1, [1/sqrt(2) 1/sqrt(2) 0]);
+h13.setoptions('Grid', 'on')
+
+%% 2 - Stability
+
+%%   2.1 - Lyapnuov Stability (Lyapunov Method)
+
+A2 = [[1 2 3];[0 5 6];[0 8 9]];
+B2 = [1;1;1];
+C2 = [0 1 0];
+D2 = 0;
+
+% perform lyapunov method stability analysis
+P = lyap(A2',eye(3))
+
+%%   2.2 - Lyapunov Stability (Eigenvalues)
+
+A2 = [[1 2 3];[0 5 6];[0 8 9]];
+eig(A2)
+
+%% 3 - LQR (Infinite Horizon)
+%%   3.1 - Definition
+%%   3.2 - Design
+%%   3.3 - Simulation
+A3 = [[-1 0];[0 -1]];
+B3 = [[2 0];[0 2]];
+C3 = [1 1];
+Ceye = eye(2);
+D3 = 0;
+
+% hand derived optimal gain K
+K3 = [[0.309 0];[0 0.309]];
+eig(A3-B3*K3);
+
+% simulation of the closed loop system
+sys3_cl = ss(A3-B3*K3, B3, Ceye, D3);
+initialplot(sys3_cl, [1;0])
+grid on
+
+%%   3.4 - Comparison
+
+R = [[1 0];[0 1]];
+v_vec = [0 1 10 100 1000];
+
+for i = 1:size(v_vec,2)
+    vi=v_vec(i);                        % select entry of v
+    sprintf('for v = %d', vi)
+    Qi = [[(1+vi) -vi];[-vi (1+vi)]]    % calculate Q
+    [Ki,~,~] = lqr(A3,B3,Qi,R, [0])     % derive optimal gain K for Q and R
+    sys3_cl_i = ss(A3-B3*Ki, B3, Ceye, D3);
+
+    [Y,T,X] = initial(sys3_cl_i, [1;0]);% simulate response
+
+    % plotting
+    figure(31)
+    hold on;
+    grid on;
+    plot(T,X(:,1), 'LineWidth', 2, 'DisplayName', sprintf('v = %d', v_vec(i)), 'Color', [i/size(v_vec,2),0,(1+1/size(v_vec,2))-i/size(v_vec,2)]);
+    legend('-DynamicLegend');
+    legend('show');
+    xlabel('time (s)');
+    ylabel('state 1');
+    title('Comparison of the effects of v scaling on state1 response');
+
+    figure(32)
+    hold on;
+    grid on;
+    plot(T,X(:,2), 'LineWidth', 2, 'DisplayName', sprintf('v = %d', v_vec(i)), 'Color', [i/size(v_vec,2),0,(1+1/size(v_vec,2))-i/size(v_vec,2)]);
+    legend('-DynamicLegend');
+    legend('show');
+    xlabel('time (s)');
+    ylabel('state 2');
+    title('Comparison of the effects of v scaling on state2 response')
+end
+figure(31)
+hold off;
+figure(32)
+hold off;
+
+%% 4 - LQR (Finite Horizon)
+%%   4.1 - Forward Ricatti Equation
+%%   4.2 - Optimal Gain Trajectories
+tf = 10;
+R = eye(2);
+B4 = [[2 0];[0 2]];
+
+% simulate the corresponding simulink model
+simOut = sim('MAE272_HW5_Q4');
+y = simOut.get('yout');
+t = simOut.get('tout');
+
+p11_bar = y{1}.Values.Data;
+p12_bar = y{2}.Values.Data;
+p22_bar = y{3}.Values.Data;
+
+% reverse time (now we go forwards)
+t = tf - t;
+
+P = [[p11_bar p12_bar];[p12_bar p22_bar]];
+
+% Multiply P by R^{-1}*B^T = 2I here
+K11 = 2*p11_bar;
+K12 = 2*p12_bar;
+K22 = 2*p22_bar;
+
+K = [[K11 K12];[K12 K22]];
+figure(4)
+grid on
+hold on
+plot(t,K11, 'LineWidth', 2, 'DisplayName', 'K11')
+plot(t,K12, 'LineWidth', 2, 'DisplayName', 'K12')
+plot(t,K22, 'LineWidth', 2, 'DisplayName', 'K22')
+xlabel('time (s)')
+ylabel('gain K(t)')
+title('Finite LQR Gain trajectories')
+legend()
+
+
+##### SOURCE END #####
+--></body></html>

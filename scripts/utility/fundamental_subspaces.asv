@@ -1,3 +1,10 @@
+%% 
+%% 
+%% SECTION TITLE
+% DESCRIPTIVE TEXT
+%% 
+%% 
+%% 
 function [column_space, row_space, left_null_space, right_null_space] = fundamental_subspaces(A)
 %FUNDAMENTAL_SUBSPACES: Given an mxn matrix, calculate the basis for all 4 of its fundamental subspaces
 %   Column Space
@@ -39,6 +46,7 @@ column_space = A(:, pivots)
 
 
 %% LEFT NULL SPACE
+% A^T x = x^T A = 0
 % find the vector space that is guaranteed to transform the rows of A to 0
 % to find the basis of the left null space, we can compute the reduced row
 % echelon form of [A I], where the dimension of I is consistent with the
@@ -47,6 +55,7 @@ E_r_M = rref([A eye(m)]);
 left_null_space = E_r_M(zero_rows, n+1:end)'
 
 %% NUMERIC RIGHT NULL SPACE
+% A x = 0
 % find a numeric solution to the right null space
 % MATLAB has a built in way to calculate the right null space of a matrix
 right_null_space_numerical = null(A)
@@ -57,6 +66,7 @@ right_null_space_numerical = null(A)
 % of the null space:
 
 %% ANALYTIC RIGHT NULL SPACE
+% A x = 0
 % find the analytic solution to the right null space, non-numeric
 % locate the non-pivot columns of A
 A_non_pivots = A;
@@ -113,7 +123,7 @@ right_null_space = E_r_rns(:, end - size(non_pivots, 2) + 1:end)
 %% CONFIRMATION VIA DIMENSIONS
 % do some final checking to ensure all dimensions agree
 if m ~= size(row_space, 2) + size(left_null_space, 2)
-    fprintf('something is off, the row subspace dimensions do not agree with the matrix dimensions')
+    printf('something is off, the row subspace dimensions do not agree with the matrix dimensions')
 end
 
 if n ~= size(column_space, 2) + size(right_null_space, 2)

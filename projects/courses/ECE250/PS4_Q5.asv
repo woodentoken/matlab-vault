@@ -1,0 +1,20 @@
+%% Question 5
+
+% compare and constrast the various ways of computing the matrix
+% exponential by evaluating the methods on the following matrix, A:
+
+A = [[0 0 0 0 0]; [0 -2 -1 1 0]; [0 2 1 -1 0]; [0 0 0 -1 1]; [0 0 0 0 -1]];
+
+% compute the eigenvectors and eigenvalues of A
+[T, Lambda] = eig(A);
+
+
+scale_square = expmdemo1(A);
+
+% breaks down when norm(A) is large
+power_series = expmdemo2(A);
+
+% breaks down when norm(A) is large
+eigendecompsition = expmdemo3(A);
+
+% explain results
