@@ -1,5 +1,5 @@
 # change directories to MATLAB
-cd ~/MATLAB
+cd ~/Documents/MATLAB
 
-# execute the alias to start the MATLAN application
+# execute the alias to start the MATLAB application
 ./matlab

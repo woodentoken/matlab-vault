@@ -55,7 +55,7 @@ Ceye = eye(2);
 D3 = 0;
 
 % hand derived optimal gain K
-K3 = [[0.309 0];[0 0.309]];
+K3 = [[0.618 0];[0 0.618]];
 eig(A3-B3*K3);
 
 % simulation of the closed loop system
@@ -133,11 +133,11 @@ K = [[K11 K12];[K12 K22]];
 figure(4)
 grid on
 hold on
-plot(t,K11, 'LineWidth', 2, 'DisplayName', 'K11')
+plot(t,K11, 'LineWidth', 2, 'LineStyle', '-', 'DisplayName', 'K11')
 plot(t,K12, 'LineWidth', 2, 'DisplayName', 'K12')
-plot(t,K22, 'LineWidth', 2, 'DisplayName', 'K22')
+plot(t,K22, 'LineWidth', 2, 'LineStyle', '--', 'DisplayName', 'K22')
 xlabel('time (s)')
 ylabel('gain K(t)')
 title('Finite LQR Gain trajectories')
-legend()
+legend('Location', 'west')
 
