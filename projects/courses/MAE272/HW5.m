@@ -11,6 +11,8 @@ D1 = 0;
 sys1 = ss(A1,B1,C1,D1);
 observability_gramian1 = gram(sys1, 'o')
 
+[V,D] = eig(A1)
+
 [V_o, D_o] = eig(observability_gramian1)
 
 %%   1.2 - Zero Observability Initial Condition
