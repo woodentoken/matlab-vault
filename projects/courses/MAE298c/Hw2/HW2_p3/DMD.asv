@@ -1,0 +1,18 @@
+function [Phi, Lambda, b] = DMD(X, Xprime, r)
+
+% Step 1
+[U, Sigma, V] = svd(X, 'econ');
+Ur = U(:, 1:r);
+Sigmar = Sigma(1:r, 1:r);
+Vr = (V(:, 1:r));
+
+% Step 2
+Atilde = Ur*Sigmar&Vr';
+
+% Step 3
+[W, Lambda] = eig(Atilde);
+
+% Step 4
+Phi = ;       % Step 4
+alpha1 = ;
+b = ;
