@@ -1,11 +1,11 @@
 %% Common setup
-clear all, close all, clc
+clearvars, close all, clc
 
 dt = 0.01; % sample time for data
-n=3;
-polyorder = 3; % up to third order polynomials
+n=3; % number of columns
+polyorder = 3; % up to third order polynomials of candidate functions
 
-%% part a 
+%% part a - SYS1 sparse identification
 load('SYS1.mat')
 Theta = poolData(x, n, polyorder); % library of functions
 Beta = [10; 28; 8/3]; % Lorenz's parameters (chaotic)
@@ -20,8 +20,7 @@ for index_1 = 1:length(lambda_1)
     poolDataLIST({'x', 'y', 'z'}, Xi_1, n, polyorder);
 end
 
-%% part b
-
+%% part b - SYS2 sparse identification
 load('SYS2.mat')
 Theta = poolData(x, n, polyorder); % library of functions
 
@@ -36,7 +35,7 @@ for index_2 = 1:length(lambda_2)
     poolDataLIST({'x', 'y', 'z'}, Xi_2, n, polyorder);
 end
 
-%% part c.a
+%% part c.a - SYS1 sparse identification (from data)
 load('SYS1.mat')
 Theta = poolData(x, n, polyorder); % library of functions
 
@@ -49,7 +48,7 @@ for index_d1 = 1:length(lambda_d1)
     poolDataLIST({'x', 'y', 'z'}, Xi_1d, n, polyorder);
 end
 
-%% part c.b
+%% part c.b - SYS2 sparse identification (from data)
 load('SYS2.mat')
 Theta = poolData(x, n, polyorder); % library of functions
 
@@ -62,12 +61,13 @@ for index_d2 = 1:length(lambda_d2)
     poolDataLIST({'x', 'y', 'z'}, Xi_2d, n, polyorder);
 end
  
-%% part d.a
+%% part d.a  - noisy SYS1 sparse identification (from data)
 % lets add noise for fun :)
 load('SYS1.mat')
 % noise for SYS1
 noise_1 = normrnd(0.1,0.2, size(x,1), size(x,2));
 
+% add noise to measurements
 x_1_noisy = x + noise_1;
 dx_1_noisy = diff(x_1_noisy)/dt;
 dx_1_noisy_full = [dx_1_noisy; dx_1_noisy(end,:)];
@@ -81,12 +81,13 @@ for index_d1 = 1:length(lambda_d1)
     poolDataLIST({'x', 'y', 'z'}, Xi_1d, n, polyorder);
 end
 
-%% part d.b
+%% part d.b - noisy SYS1 sparse identification (from data)
 % lets add noise for fun :)
 load('SYS2.mat')
 % noise for SYS2
 noise_2 = normrnd(0.1,0.2, size(x,1), size(x,2))/100;
 
+% add noise to measurements
 x_2_noisy = x + noise_2;
 dx_2_noisy = diff(x_2_noisy)/dt;
 dx_2_noisy_full = [dx_2_noisy; dx_2_noisy(end,:)];
