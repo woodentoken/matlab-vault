@@ -13,7 +13,7 @@ for i=1:length(x)
     dx_1(i,:) = lorenz(0, x(i,:), Beta);
 end
 
-lambda_1 = [0.01 0.025 1];
+lambda_1 = [0.1 1 5];
 for index_1 = 1:length(lambda_1)
     lambda_1(index_1)
     Xi_1 = sparsifyDynamics(Theta, dx_1, lambda_1(index_1), n);
