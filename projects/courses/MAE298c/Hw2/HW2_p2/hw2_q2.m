@@ -58,6 +58,7 @@ figure
 plot(r, iminformation, 'g', 'LineWidth', 2)
 xlabel('r')
 ylabel('filesize')
+grid on
 title('truncation value vs. filesize')
 
 

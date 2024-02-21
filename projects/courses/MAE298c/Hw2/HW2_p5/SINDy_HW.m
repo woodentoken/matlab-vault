@@ -7,6 +7,24 @@ polyorder = 3; % up to third order polynomials of candidate functions
 
 %% part a - SYS1 sparse identification
 load('SYS1.mat')
+
+figure(1)
+hold on
+grid on
+for i = 1:3:length(x)-1
+    plot3( ...
+        [x(i,1), x(i+1,1)], ...
+        [x(i,2), x(i+1,2)], ...
+        [x(i,3), x(i+1,3)], ...
+        'Color', [i/length(x), 1- i/length(x), 0] ...
+        )
+end
+view(3)
+xlabel('x')
+ylabel('y')
+zlabel('z')
+title('System 1 Trajectories')
+
 Theta = poolData(x, n, polyorder); % library of functions
 Beta = [10; 28; 8/3]; % Lorenz's parameters (chaotic)
 for i=1:length(x)
@@ -22,6 +40,24 @@ end
 
 %% part b - SYS2 sparse identification
 load('SYS2.mat')
+
+figure(2)
+hold on
+grid on
+for i = 1:3:length(x)-1
+    plot3( ...
+        [x(i,1), x(i+1,1)], ...
+        [x(i,2), x(i+1,2)], ...
+        [x(i,3), x(i+1,3)], ...
+        'Color', [i/length(x), 1- i/length(x), 0] ...
+        )
+end
+view(3)
+xlabel('x')
+ylabel('y')
+zlabel('z')
+title('System 2 Trajectories')
+
 Theta = poolData(x, n, polyorder); % library of functions
 
 for i=1:length(x)
@@ -60,7 +96,7 @@ for index_d2 = 1:length(lambda_d2)
     Xi_2d = sparsifyDynamics(Theta, dx_data_2_full, lambda_d2(index_d2), n);
     poolDataLIST({'x', 'y', 'z'}, Xi_2d, n, polyorder);
 end
- 
+
 %% part d.a  - noisy SYS1 sparse identification (from data)
 % lets add noise for fun :)
 load('SYS1.mat')
@@ -72,6 +108,23 @@ x_1_noisy = x + noise_1;
 dx_1_noisy = diff(x_1_noisy)/dt;
 dx_1_noisy_full = [dx_1_noisy; dx_1_noisy(end,:)];
 
+figure(5)
+hold on
+grid on
+for i = 1:3:length(x)-1
+    plot3( ...
+        [x_1_noisy(i,1), x_1_noisy(i+1,1)], ...
+        [x_1_noisy(i,2), x_1_noisy(i+1,2)], ...
+        [x_1_noisy(i,3), x_1_noisy(i+1,3)], ...
+        'Color', [i/length(x), 1- i/length(x), 0] ...
+        )
+end
+view(3)
+xlabel('x')
+ylabel('y')
+zlabel('z')
+title('System 1 Trajectories - With Noise')
+
 Theta = poolData(x_1_noisy, n, polyorder); % library of functions
 
 lambda_d1 = [0.001 0.025 1];
@@ -81,7 +134,7 @@ for index_d1 = 1:length(lambda_d1)
     poolDataLIST({'x', 'y', 'z'}, Xi_1d, n, polyorder);
 end
 
-%% part d.b - noisy SYS1 sparse identification (from data)
+%% part d.b - noisy SYS2 sparse identification (from data)
 % lets add noise for fun :)
 load('SYS2.mat')
 % noise for SYS2
@@ -91,6 +144,23 @@ noise_2 = normrnd(0.1,0.2, size(x,1), size(x,2))/100;
 x_2_noisy = x + noise_2;
 dx_2_noisy = diff(x_2_noisy)/dt;
 dx_2_noisy_full = [dx_2_noisy; dx_2_noisy(end,:)];
+
+figure(6)
+hold on
+grid on
+for i = 1:3:length(x)-1
+    plot3( ...
+        [x_2_noisy(i,1), x_2_noisy(i+1,1)], ...
+        [x_2_noisy(i,2), x_2_noisy(i+1,2)], ...
+        [x_2_noisy(i,3), x_2_noisy(i+1,3)], ...
+        'Color', [i/length(x), 1- i/length(x), 0] ...
+        )
+end
+view(3)
+xlabel('x')
+ylabel('y')
+zlabel('z')
+title('System 2 Trajectories - With Noise')
 
 Theta = poolData(x_2_noisy, n, polyorder); % library of functions
 

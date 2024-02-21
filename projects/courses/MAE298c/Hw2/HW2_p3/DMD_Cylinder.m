@@ -1,5 +1,5 @@
 clearvars; close all; clc
-load('CylinderFlow.mat');
+load('CylinderFlow.mat');e pd
 
 % CylinderFlow contains flow fields reshaped into column vectors
 X = CylinderFlow(:,1:end-1); % data matrix X
@@ -75,7 +75,7 @@ for index_r = 1:length(r_vec)
         Lambda_vec = diag(Lambda);
 
         % plot the reconstructed flow field
-        axis_reconstruction = subplot(2,2,index_approx);
+        axis_reconstruction = subplot(2, 2, index_approx);
         
         % I assume we use this form of the X approximation, 
         X_approx = Phi * Lambda^(time_checks(index_approx)) * b;
@@ -85,13 +85,13 @@ for index_r = 1:length(r_vec)
         title(['t = ', num2str(time_checks(index_approx), '%d')])
 
         % plot the difference between true and approximate
-        axis_difference = subplot(2,2,index_approx);
+        axis_difference = subplot(2, 2, index_approx);
         approx_difference = real(reshape(X(:, time_checks(index_approx)),199,449)) - X_approx;
 
         plotCylinder(axis_difference, real(approx_difference))
         title(['t = ', num2str(time_checks(index_approx), '%d')])
 
-        rmse_matrix = rmse(real(reshape(X(:, time_checks(index_approx)),199,449)), X_approx);
+        rmse_matrix = rmse(X_approx, real(reshape(X(:, time_checks(index_approx)),199,449)));
         rmse_vec(index_approx) = sum(rmse_matrix);
     end
 
@@ -101,5 +101,7 @@ for index_r = 1:length(r_vec)
     hold on
     xlabel('time')
     ylabel('sum of root mean square error, per timestep')
+    title('comparison of RMSE sums across r and time')
 end
-legend()
+grid on
+legend('Location', 'best')
