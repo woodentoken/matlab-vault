@@ -141,84 +141,76 @@ for j = 1:length(rbf_types)
         sgtitle(['rbf type:', rbf_type])
         if k==1
             subplot(2,1,1)
-            title('predictor comparison x_1')
             plot([0:Nsim]*deltaT,x_true(1,:),'b', 'linewidth',lw+1, DisplayName='True'); hold on
             grid on
         end
         subplot(2,1,1)
-        plot([0:Nsim]*deltaT,x_koop(1,:),'linewidth',lw, 'Color', [0.7*(k-1)/length(values)+0.3,0, 0], DisplayName=['num_rbf= ', num2str(values(k))])
+        plot([0:Nsim]*deltaT,x_koop(1,:),'linewidth',lw, 'Color', [0.7*(k-1)/length(values)+0.3,0, 0], DisplayName=['r= ', num2str(values(k))])
         hold on
         ylim([-1.5,1.5])
         legend
 
         if k==1
             subplot(2,1,2)
-            title('predictor comparison x_2')
             plot([0:Nsim]*deltaT,x_true(2,:),'b', 'linewidth',lw+1, DisplayName="True"); hold on
             grid on
         end
         subplot(2,1,2)
-        plot([0:Nsim]*deltaT,x_koop(2,:),'linewidth', lw, 'Color', [0.75*(k-1)/length(values)+0.25, 0, 0], DisplayName=['num_rbf = ', num2str(values(k))])
+        plot([0:Nsim]*deltaT,x_koop(2,:),'linewidth', lw, 'Color', [0.75*(k-1)/length(values)+0.25, 0, 0], DisplayName=['r = ', num2str(values(k))])
         hold on
         ylim([-1.5,1.5])
         legend
     end
-    saveas(gcf, rbf_type, 'png')
+    %saveas(gcf, rbf_type, 'png')
 end
 
-n = [5:5:20];
+n = [6:3:21];
 for l = 1:length(n)
 p = polyfit([0:Nsim]*deltaT,x_true(1,:),n(l));
 pv = polyval(p, [0:Nsim]*deltaT);
 subplot(2,1,1)
-title('polynomial comparison x_1')
 plot([0:Nsim]*deltaT, pv, ':', 'Color', [0, 0.75*(l-1)/length(n)+0.25, 0],'linewidth',lw+1, DisplayName=['n = ',num2str(n(l))])
 
 p = polyfit([0:Nsim]*deltaT,x_true(2,:),n(l));
 pv = polyval(p, [0:Nsim]*deltaT);
 subplot(2,1,2)
-title('polynomial comparison x_2')
 plot([0:Nsim]*deltaT, pv, ':', 'Color', [0, 0.75*(l-1)/length(n)+0.25, 0],'linewidth',lw+1, DisplayName=['n = ',num2str(n(l))])
 end
 legend
-saveas(gcf, 'poly_comparison', 'png')
 
 
 %% ****************************  Plots  ***********************************
 
-lw = 2;
-
-figure
-plot([0:Nsim-1]*deltaT,u_dt(0:Nsim-1),'linewidth',lw); hold on
-title('Control input $u$', 'interpreter','latex'); xlabel('Time [s]','interpreter','latex');
-set(gca,'fontsize',20)
-saveas(gcf, '0_comp_control', 'png')
-
-figure
-plot([0:Nsim]*deltaT,x_true(2,:),'linewidth',lw); hold on
-plot([0:Nsim]*deltaT,x_koop(2,:), '-r','linewidth',lw)
-plot([0:Nsim]*deltaT,X_loc_x0(2,:), '-.g','linewidth',lw-1)
-plot([0:Nsim]*deltaT,X_loc_0(2,:), '-.k','linewidth',lw-1)
-axis([0 Tmax min(x_koop(2,:))-0.15 max(x_koop(2,:))+0.15])
-title('Predictor comparison - $x_2$','interpreter','latex'); xlabel('Time [s]','interpreter','latex');
-set(gca,'fontsize',20)
-grid on
-LEG = legend('True','Koopman','Local at $x_0$','Local at 0','location','southwest');
-set(LEG,'interpreter','latex')
-saveas(gcf, '0_comp_2', 'png')
-
-figure
-plot([0:Nsim]*deltaT,x_true(1,:),'linewidth',lw); hold on
-plot([0:Nsim]*deltaT,x_koop(1,:), '-r','linewidth',lw)
-plot([0:Nsim]*deltaT,X_loc_x0(1,:), '-.g','linewidth',lw-1)
-plot([0:Nsim]*deltaT,X_loc_0(1,:), '-.k','linewidth',lw-1)
-axis([0 Tmax min(x_koop(1,:))-0.1 max(x_koop(1,:))+0.1])
-title('Predictor comparison - $x_1$','interpreter','latex'); xlabel('Time [s]','interpreter','latex');
-set(gca,'fontsize',20)
-grid on
-LEG = legend('True','Koopman','Local at $x_0$','Local at 0','location','southwest');
-set(LEG,'interpreter','latex')
-saveas(gcf, '0_comp_1', 'png')
+% lw = 3;
+%
+% figure
+% plot([0:Nsim-1]*deltaT,u_dt(0:Nsim-1),'linewidth',lw); hold on
+% title('Control input $u$', 'interpreter','latex'); xlabel('Time [s]','interpreter','latex');
+% set(gca,'fontsize',20)
+%
+% figure
+% plot([0:Nsim]*deltaT,x_true(2,:),'linewidth',lw); hold on
+% plot([0:Nsim]*deltaT,x_koop(2,:), '-r','linewidth',lw)
+% plot([0:Nsim]*deltaT,X_loc_x0(2,:), '-.g','linewidth',lw-1)
+% plot([0:Nsim]*deltaT,X_loc_0(2,:), '-.y','linewidth',lw-1)
+% axis([0 Tmax min(x_koop(2,:))-0.15 max(x_koop(2,:))+0.15])
+% title('Predictor comparison - $x_2$','interpreter','latex'); xlabel('Time [s]','interpreter','latex');
+% set(gca,'fontsize',20)
+% grid on
+% LEG = legend('True','Koopman','Local at $x_0$','Local at 0','location','southwest');
+% set(LEG,'interpreter','latex')
+%
+% figure
+% plot([0:Nsim]*deltaT,x_true(1,:),'linewidth',lw); hold on
+% plot([0:Nsim]*deltaT,x_koop(1,:), '-r','linewidth',lw)
+% plot([0:Nsim]*deltaT,X_loc_x0(1,:), '-.g','linewidth',lw-1)
+% plot([0:Nsim]*deltaT,X_loc_0(1,:), '-.y','linewidth',lw-1)
+% axis([0 Tmax min(x_koop(1,:))-0.1 max(x_koop(1,:))+0.1])
+% title('Predictor comparison - $x_1$','interpreter','latex'); xlabel('Time [s]','interpreter','latex');
+% set(gca,'fontsize',20)
+% grid on
+% LEG = legend('True','Koopman','Local at $x_0$','Local at 0','location','southwest');
+% set(LEG,'interpreter','latex')
 
 
 
