@@ -1,5 +1,6 @@
 clear all
 close all
+clc
 rng(2141444)
 
 %% *************************** Dynamics ***********************************
@@ -21,16 +22,13 @@ f_ud = @(t,x,u) ( x + (deltaT/6) * ( k1(t,x,u) + 2*k2(t,x,u) + 2*k3(t,x,u) + k4(
 %% ************************** Basis functions *****************************
 
 values = [10 20 50 100];
-values = [10];
 rbf_types = {'thinplate', 'gauss', 'invquad', 'polyharmonic'};
 
-lw = 2;
+lw = 1;
 
 for j = 1:length(rbf_types)
-    figure(100*j)
     rbf_type = string(rbf_types(j));
     sprintf(rbf_type)
-    title(['rbf_type = ', rbf_type])
     for k = 1:length(values)
 
         % RBF centers
@@ -137,14 +135,31 @@ for j = 1:length(rbf_types)
         x_koop = Clift * xlift; % Koopman predictions
 
         % plotting loops
+        figure(100*j)
+        sgtitle(['rbf type:', rbf_type])
+        if k==1
+            subplot(2,1,1)
+            plot([0:Nsim]*deltaT,x_true(1,:),'b', 'linewidth',lw+1, DisplayName='True'); hold on
+            grid on
+        end
+        subplot(2,1,1)
+        plot([0:Nsim]*deltaT,x_koop(1,:),'linewidth',lw, 'Color', [0.7*(k-1)/length(values)+0.3,0, 0], DisplayName=num2str(values(k)))
+        hold on
+        ylim([-1.5,1.5])
+        legend
 
         if k==1
-            plot([0:Nsim]*deltaT,x_true(2,:),'b', 'linewidth',lw+1); hold on
+            subplot(2,1,2)
+            plot([0:Nsim]*deltaT,x_true(2,:),'b', 'linewidth',lw+1, DisplayName="True"); hold on
+            grid on
         end
-        plot([0:Nsim]*deltaT,x_koop(2,:),'linewidth',lw, DisplayName=num2str(values(k)))
+        subplot(2,1,2)
+        plot([0:Nsim]*deltaT,x_koop(2,:),'linewidth', lw, 'Color', [0.75*(k-1)/length(values)+0.25, 0, 0], DisplayName=num2str(values(k)))
         hold on
+        ylim([-1.5,1.5])
+        legend
     end
-    plot(Y)
+    saveas(gcf, rbf_type, 'png')
 end
 
 
