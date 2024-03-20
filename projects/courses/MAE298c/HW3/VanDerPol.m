@@ -1,7 +1,7 @@
 clear all
 close all
 clc
-rng(2141444)
+%rng(2141444)
 
 %% *************************** Dynamics ***********************************
 
@@ -22,9 +22,7 @@ f_ud = @(t,x,u) ( x + (deltaT/6) * ( k1(t,x,u) + 2*k2(t,x,u) + 2*k3(t,x,u) + k4(
 %% ************************** Basis functions *****************************
 
 values = [10 20 50 100];
-values = [50];
-rbf_types = {'thinplate', 'gauss', 'invquad', 'polyharmonic'};
-rbf_types = {'thinplate'};
+rbf_types = {'gauss', 'invquad', 'polyharmonic'};
 
 lw = 1;
 
@@ -44,7 +42,7 @@ for j = 1:length(rbf_types)
         %% ************************** Collect data ********************************
         tic
         disp('Starting data collection')
-        Nsim = 200;
+        Nsim = 1000;
         Ntraj = 1000;
 
         % Random forcing
@@ -166,22 +164,22 @@ for j = 1:length(rbf_types)
     saveas(gcf, rbf_type, 'png')
 end
 
-n = [5:5:20];
-for l = 1:length(n)
-p = polyfit([0:Nsim]*deltaT,x_true(1,:),n(l));
-pv = polyval(p, [0:Nsim]*deltaT);
-subplot(2,1,1)
-title('polynomial comparison x_1')
-plot([0:Nsim]*deltaT, pv, ':', 'Color', [0, 0.75*(l-1)/length(n)+0.25, 0],'linewidth',lw+1, DisplayName=['n = ',num2str(n(l))])
-
-p = polyfit([0:Nsim]*deltaT,x_true(2,:),n(l));
-pv = polyval(p, [0:Nsim]*deltaT);
-subplot(2,1,2)
-title('polynomial comparison x_2')
-plot([0:Nsim]*deltaT, pv, ':', 'Color', [0, 0.75*(l-1)/length(n)+0.25, 0],'linewidth',lw+1, DisplayName=['n = ',num2str(n(l))])
-end
-legend
-saveas(gcf, 'poly_comparison', 'png')
+% n = [5:5:20];
+% for l = 1:length(n)
+% p = polyfit([0:Nsim]*deltaT,x_true(1,:),n(l));
+% pv = polyval(p, [0:Nsim]*deltaT);
+% subplot(2,1,1)
+% title('polynomial comparison x_1')
+% plot([0:Nsim]*deltaT, pv, ':', 'Color', [0, 0.75*(l-1)/length(n)+0.25, 0],'linewidth',lw+1, DisplayName=['n = ',num2str(n(l))])
+% 
+% p = polyfit([0:Nsim]*deltaT,x_true(2,:),n(l));
+% pv = polyval(p, [0:Nsim]*deltaT);
+% subplot(2,1,2)
+% title('polynomial comparison x_2')
+% plot([0:Nsim]*deltaT, pv, ':', 'Color', [0, 0.75*(l-1)/length(n)+0.25, 0],'linewidth',lw+1, DisplayName=['n = ',num2str(n(l))])
+% end
+% legend
+% saveas(gcf, 'poly_comparison', 'png')
 
 
 %% ****************************  Plots  ***********************************

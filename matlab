@@ -1,1 +1,1 @@
-/usr/local/MATLAB/R2023a/bin/matlab
+/usr/local/MATLAB/R2023b/bin/matlab
