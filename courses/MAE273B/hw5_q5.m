@@ -28,9 +28,9 @@ W_p_ss = ss(W_ptf);
 %% Y actuation filter (Y)
 W_y_num = {5 0; 0 5; 0 0};
 W_y_den = {1 1; 1 1; 1 1};
-W_y = tf(W_y_num, W_y_den);
+W_ytf = tf(W_y_num, W_y_den);
 %W_y = eye(3,2);
-W_y_ss = ss(W_y);
+W_y_ss = ss(W_ytf);
 [Au, Bu, Cu, Du] = ssdata(W_y_ss);
 Au=[];
 Bu=[];
@@ -90,33 +90,33 @@ figure(1)
 subplot(3,1,1)
 sigma( ...
     ltf.Lo, 'm', ...
-    Gtf, '', ...
+    G, '', ...
     G_c, '' ...
     )
 legend('Ly', 'Gp', 'Gc','Location', 'best')
 grid
-set(gca,'Color','k')
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
 
 subplot(3,1,2)
 sigma( ...
     ltf.Lo, 'w', ...
     ltf.So, 'r', ...
-    Wptf, 'r--', ...
+    W_ptf, 'r--', ...
     ltf.To, 'c', ...
-    Wdtf, 'c--'...
+    W_dtf, 'c--'...
     )
 legend( 'Ly', 'Sy', 'Wp','Ty', 'Wd', 'Location', 'best')
 grid
-set(gca,'Color','k')
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
 
 subplot(3,1,3)
 sigma( ...
     Y, 'y', ...
-    W_y, 'g' ...
+    W_ytf, 'g' ...
    )
 legend('Y', 'Wy', 'Location', 'best')
 grid
-set(gca,'Color','k')
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
 
 figure(2)
 step(ltf.To)
@@ -127,8 +127,7 @@ figure(3)
 step(Y)
 title('actuator activity under step response')
 grid
-
-
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
 %% plotting
 figure(11)
 sigma( ...
@@ -139,16 +138,16 @@ sigma( ...
     )
 legend( 'Ty', 'Sy', 'Su', 'Y', 'Location', 'best')
 grid on
-set(gca,'Color','k')
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
 
 figure(22)
 sigma( ...
     G_c, 'w', ...
-    Gtf, 'g', ...
+    G, 'g', ...
     ltf.Lo, 'c-.', ...
     Y, 'm--' ...
     )
-legend( 'Gp', 'Gc', 'Ly', 'Y', 'Location', 'best')
+legend( 'Gc', 'Gp', 'Ly', 'Y', 'Location', 'best')
 grid on
-set(gca,'Color', 'k')
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
 

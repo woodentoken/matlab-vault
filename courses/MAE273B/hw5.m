@@ -1,4 +1,5 @@
 %% Problem 1
+hw5_q1
 
 %% Problem 2
 
@@ -38,13 +39,17 @@ Y = inv(eye(3)+Lu)*Gc;
 
 figure(1)
 opts = sigmaoptions;
-opts.XLim = [0.001, 1000];
-sigmaplot(Ty, 'c', Sy, 'r', Su, 'b-.', Y, 'm--', opts)
+opts.XLim = [0.0001, 10000];
+sigmaplot(Ty, 'c', Sy, 'r', Su, 'y-.', Y, 'm--', opts)
 legend('Ty', 'Sy', 'Su', 'Y')
 grid on
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
 
 figure(2)
-sigmaplot(Gc, 'k', Gp, 'g', Ly, 'r', Y, 'm--', opts)
+sigmaplot(Gc, 'w', Gp, 'g', Ly, 'c-.', Y, 'm--', opts)
 legend('Gc', 'Gp', 'Ly', 'Y')
 grid on
+set(gca, 'Color','k', 'XColor','w', 'YColor','w');set(gcf, 'Color','k')
+
 %% Problem 5
+hw5_q5
