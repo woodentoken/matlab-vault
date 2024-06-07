@@ -1,0 +1,77 @@
+%% Example
+% this example investiagtes the effect of uncertainty in the parameters on
+% the control response of the system. As uncertainty in the parameters
+% increases, the control effectiveness gets worse and worse and the system
+% eventually trend towards instability. 
+% relies on:
+% - ureal -> defines uncertain parameters in terms of a nominal value and a
+% deviation from the nominal value
+% - robstab -> calculates the robust stability margin for a system that
+% involves uncertain parameters. the parameter variations that cause the
+% system to first go unstable can be categorized here
+% - usubs -> substitute uncertain parameters into the system
+% - wcgain -> worst case gain of an uncertain dynamical system. This worst
+% case arises when wcu induce the system closes to possible uncertainty.
+
+s = zpk('s');
+G_c = 100*ss((s+1)/(.001*s+1))^3; 
+% triple lead compensator, adds lead at 1 rad/s and then lag at 1000 rad/s
+% significant gain
+
+% bode(G_c)
+% grid on
+
+k_guess = 1;
+m1_guess = 1;
+m2_guess = 1;
+
+uncert = 50; %percent of uncertainty
+
+% spring and masses are only known approximately
+k = ureal('k', k_guess, 'percent', uncert);
+m1 = ureal('m1', m1_guess, 'percent', uncert);
+m2 = ureal('m2', m2_guess, 'percent', uncert);
+
+% transfer function relating acceleration of cart 1 to input force f1
+G_1 = 1/s^2/m1;
+
+% tranfer functionr elating acceleration of cart 2 to input force f2
+G_2 = 1/s^2/m2;
+
+% relate the systems of the individual blocks together (no spring yet);
+F = [0;G_1]*[1 -1] + [1;-1]*[0,G_2];
+
+% connect the inner system with a spring 
+G_p = lft(F,k);
+
+% Open Loop TF
+L = G_p*G_c;
+T = feedback(L,1);
+
+G_p_nom = zpk(G_p.NominalValue)
+T_nom = zpk(T.NominalValue)
+
+opt = robOptions('Display', 'on', 'Sensitivity', 'on');
+[stab_margin, wc_params] = robstab(T, opt);
+wc_params
+
+[PeakGain, wc_params] = wcgain(T);
+PeakGain
+
+% create worst case closed loop system by substituting worst case
+% parameters;
+% note that this is the worst case only for the chosen uncertainty values!
+Twc = usubs(T, wc_params);
+
+% sample from the uncertain parameters X, times and create random closed
+% loop systems
+N_samples = 5;
+Trand = usample(T, N_samples);
+clf
+subplot(211)
+bodemag(Trand, 'b', Twc, 'r', {10 1000})
+
+subplot(212)
+step(Trand, 'b', Twc, 'r', 0.2)
+
+
